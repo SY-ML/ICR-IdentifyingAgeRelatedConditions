@@ -1,22 +1,46 @@
 import pandas as pd
 import os
 from pandas_profiling import ProfileReport
+import seaborn as sns
 
 df_train = pd.read_csv('./icr-identify-age-related-conditions/train.csv')
 df_test = pd.read_csv('./icr-identify-age-related-conditions/test.csv')
 df_geek = pd.read_csv('./icr-identify-age-related-conditions/greeks.csv')
 
-# Create the ProfileReport objects
-profile_train = ProfileReport(df_train, title="Training Set Profiling Report")
-profile_test = ProfileReport(df_test, title="Test Set Profiling Report")
-profile_greek = ProfileReport(df_geek, title="Greeks Set Profiling Report")
+ls_dataset = [df_train, df_test]
 
-# Save the reports as HTML files
-# path_report = './pandas_profiling_reports'
-# os.mkdir(path_report) if os.path.exists('./pandas_profiling_reports') else 0
-# profile_train.to_file("train_report.html")
-# profile_test.to_file("test_report.html")
-# profile_greek.to_file("geek_report.html")
+def run_pandas_profiling_report():
+    # Create the ProfileReport objects
+    profile_train = ProfileReport(df_train, title="Training Set Profiling Report")
+    profile_test = ProfileReport(df_test, title="Test Set Profiling Report")
+    profile_greek = ProfileReport(df_geek, title="Greeks Set Profiling Report")
+
+    # Save the reports as HTML files
+    path_report = './pandas_profiling_reports'
+    os.mkdir(path_report) if os.path.exists('./pandas_profiling_reports') else 0
+    profile_train.to_file("train_report.html")
+    profile_test.to_file("test_report.html")
+    profile_greek.to_file("geek_report.html")
+    print('Report Generated')
+
+def glance_at_dataset(df):
+    for col in df.columns:
+        if col == 'Id': continue
+        print(f'{col}: {df[col].dtype}')
+        if df[col].dtype == 'object':
+            print(df[col].value_counts())
+
+for data in ls_dataset:
+    print(glance_at_dataset(data))
+
+def preprocess_dataset(df):
+    df['EJ'] = df['EJ'].replace({'A':0, 'B': 1})
+    return df
+
+print(preprocess_dataset(df_train)['EJ'])
+
+print(df_train.shape)
+exit()
 
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.feature_selection import mutual_info_classif
@@ -24,6 +48,9 @@ from sklearn.ensemble import RandomForestClassifier
 from scipy.stats import pearsonr
 import pandas as pd
 import numpy as np
+
+print(df_train)
+exit()
 
 def exhaustive_feature_engineering(df, target_col):
     features = df.drop(columns=[target_col]).columns
