@@ -3,6 +3,12 @@ import os
 from pandas_profiling import ProfileReport
 import seaborn as sns
 
+"""
+Reference
+https://www.kaggle.com/code/mateuszk013/icr-eda-balanced-learning-with-lgbm-xgb
+
+"""
+
 df_train = pd.read_csv('./icr-identify-age-related-conditions/train.csv')
 df_test = pd.read_csv('./icr-identify-age-related-conditions/test.csv')
 df_geek = pd.read_csv('./icr-identify-age-related-conditions/greeks.csv')
