@@ -43,10 +43,14 @@ def preprocess_dataset(df):
     df['EJ'] = df['EJ'].replace({'A':0, 'B': 1})
     return df
 
-print(preprocess_dataset(df_train)['EJ'])
+## 061723 :(
+def get_correlation_with_class(df):
+    correlations = df_train.corr()['Class'].sort_values(ascending=False)
+    return correlations
 
-print(df_train.shape)
-exit()
+corr_train = get_correlation_with_class(df_train)
+print(corr_train)
+
 
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.feature_selection import mutual_info_classif
@@ -55,9 +59,8 @@ from scipy.stats import pearsonr
 import pandas as pd
 import numpy as np
 
-print(df_train)
-exit()
 
+exit()
 def exhaustive_feature_engineering(df, target_col):
     features = df.drop(columns=[target_col]).columns
     results = []
@@ -89,3 +92,5 @@ def exhaustive_feature_engineering(df, target_col):
     df_results = pd.DataFrame(results, columns=['Feature', 'Mutual_Info', 'Pearson_Corr', 'Feat_Imp_1', 'Feat_Imp_2'])
     return df_results
 
+result = exhaustive_feature_engineering(df_train, df_train['Class'])
+print(result)
